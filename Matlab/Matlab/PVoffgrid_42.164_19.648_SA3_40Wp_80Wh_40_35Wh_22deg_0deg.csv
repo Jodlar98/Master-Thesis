@@ -1,0 +1,52 @@
+Latitude (decimal degrees):	42.164
+Longitude (decimal degrees):	19.648
+Radiation database:	PVGIS-SARAH3
+
+Slope of modules (deg.):	22
+Azimuth of modules (deg.):	0
+Nominal power of the PV system (W):	40
+Battery capacity (Wh):	80
+Discharge cutoff limit (%):	40
+Consumption per day (Wh):	35
+
+Number of days used for the calculation:	6939
+Percentage of days with fully charged battery:	81.44
+Average energy not captured due to full battery (Wh):	100.39
+Percentage of days the battery became fully discharged:	10.75
+Average energy missing (Wh):	11.22
+
+month		E_d		E_lost_d		f_f		f_e
+1		31.35		23.5		57.34		30.02
+2		33.36		38.58		64.1		20.49
+3		34.49		66.69		75.89		8.83
+4		34.9		93.07		90.88		1.58
+5		34.92		116.62		96.26		0.51
+6		35.0		129.72		98.95		0.0
+7		35.0		146.17		100.0		0.0
+8		34.9		142.69		99.49		0.51
+9		34.91		101.36		95.96		0.18
+10		34.48		67.14		80.98		5.26
+11		32.05		33.93		62.63		24.21
+12		30.16		18.82		53.99		37.69
+
+E_d: Average energy production per day (Wh/d)
+E_lost_d: Average energy not captured per day (Wh/d)
+f_f: Percentage of days when the battery became full (%)
+f_e: Percentage of days when the battery became empty (%)
+
+CS_min		CS_max		f_CS
+40.0		46.0		6.0
+46.0		52.0		2.0
+52.0		58.0		2.0
+58.0		64.0		2.0
+64.0		70.0		6.0
+70.0		76.0		18.0
+76.0		82.0		16.0
+82.0		88.0		7.0
+88.0		94.0		5.0
+94.0		100.0		37.0
+
+CS: Charge state at the end of each hour (%)
+f_CS: Percentage of days with this charge state (%)
+
+PVGIS (c) European Union, 2001-2025

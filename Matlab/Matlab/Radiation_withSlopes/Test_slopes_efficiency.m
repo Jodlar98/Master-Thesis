@@ -1,0 +1,114 @@
+
+slope1 = readtable("Timeseries_42.164_19.648_SA3_0deg_0deg_2023_2023.csv");
+sum1 = sum(slope1.G_i_(1:8670));
+slope2 = readtable("Timeseries_42.164_19.648_SA3_20deg_-45deg_2023_2023.csv");
+sum2 = sum(slope2.G_i_(1:8670));
+slope3 = readtable("Timeseries_42.164_19.648_SA3_35deg_0deg_2023_2023.csv");
+sum3 = sum(slope3.G_i_(1:8670));
+slope4 = readtable("Timeseries_42.164_19.648_SA3_35deg_-45deg_2023_2023.csv");
+sum4 = sum(slope4.G_i_(1:8670));
+slope5 = readtable("Timeseries_42.164_19.648_SA3_45deg_0deg_2023_2023.csv");
+sum5 = sum(slope5.G_i_(1:8670));
+slope6 = readtable("Timeseries_42.164_19.648_SA3_90deg_0deg_2023_2023.csv");
+sum6 = sum(slope6.G_i_(1:8670));
+slope7 = readtable("Timeseries_42.164_19.648_SA3_90deg_-90deg_2023_2023.csv");
+sum7 = sum(slope7.G_i_(1:8670));
+optimalslope = readtable("Timeseries_42.164_19.648_SA3_35deg_21deg_2023_2023.csv");
+optimalsum = sum(optimalslope.G_i_(1:8670));
+slopesum = [sum1, sum2, sum3, sum4, sum5, sum6, sum7, optimalsum];
+slopesum = slopesum/optimalsum;
+
+sortert_slopesum = sort(slopesum, "ascend");
+%save("slope_effectiveness.mat", "sortert_slopesum");
+% Create a figure
+fig = figure;
+% Set the size of the figure
+set(fig, 'Position', [100, 100, 800, 400]); % [left, bottom, width, height]
+plot(sortert_slopesum)
+
+%% Plot
+% Anta at du har disse dataene (erstatt med din faktiske data)
+hjulpet = [1; 1; 1; 0; 0; 0; 1; 1; 1; 1; 0; 1; 0; 0; 0; 0];
+effekt = [0.9832; 0.8603; 0.8638; 0.9676; 0.8868; 0.8638; 0.8638; 0.8638; 0.8638; 0.3252; 0.8638; 0.642; 0.642; 0.3252; 0.8638; 0.9832];
+save("slope_effectiveness.mat", "effekt");
+
+% Kombiner dataen for sortering
+kombinert_data = [effekt, hjulpet];
+
+% Sorter dataen basert på effekten (første kolonne)
+sortert_data = sortrows(kombinert_data, 1);
+
+sortert_effekt = sortert_data(:, 1);
+sortert_hjulpet = sortert_data(:, 2);
+
+% Finn indeksene for de som ble hjulpet og ikke ble det i den sorterte dataen
+indeks_sortert_hjulpet = (sortert_hjulpet == 1);
+indeks_sortert_ikke_hjulpet = (sortert_hjulpet == 0);
+
+% Lag en indeks for x-aksen (fra 1 til antall datapunkter)
+x_akse = 1:length(sortert_effekt);
+
+% Plot punktene for de som ble hjulpet (blå)
+scatter(x_akse(indeks_sortert_hjulpet), sortert_effekt(indeks_sortert_hjulpet), 'b');
+hold on;
+
+% Plot punktene for de som ikke ble hjulpet (rød)
+scatter(x_akse(indeks_sortert_ikke_hjulpet), sortert_effekt(indeks_sortert_ikke_hjulpet), 'r');
+
+% Legg til etiketter og tittel
+%xlabel('PV Panel');
+ylabel('Slope Efficiency');
+title('Efficiency of Panel Slopes in Accending Order');
+
+% Legg til en forklaring (legend)
+legend('Helped', 'Not Helped');
+
+hold off;
+
+
+%% New plot
+
+% Your provided data
+hjulpet_logical = [1; 1; 1; 0; 0; 0; 1; 1; 1; 1; 0; 1; 0; 0; 0; 0]; % 1 for Helped, 0 for Not Helped
+effekt = [0.9832; 0.8603; 0.8638; 0.9676; 0.8868; 0.8638; 0.8638; 0.8638; 0.8638; 0.3252; 0.8638; 0.642; 0.642; 0.3252; 0.8638; 0.9832];
+
+% Create a grouping variable for boxplot and swarmchart
+group = cell(length(hjulpet_logical), 1);
+group(hjulpet_logical == 1) = {'Helped'};
+group(hjulpet_logical == 0) = {'Not Helped'};
+
+
+%% Boxplot
+fig2 = figure;
+set(fig2, 'Position', [100, 100, 500, 400]); % [left, bottom, width, height]
+boxplot(effekt, group, 'Labels', {'Not Helped', 'Helped'}); % Order of labels might depend on how MATLAB sorts the group strings
+ylabel('Slope Efficiency ($\eta$)','Interpreter','latex');
+title('Comparison of Slope Efficiency: Helped vs. Not Helped');
+grid on;
+
+%% Jitter
+fig3 = figure;
+set(fig3, 'Position', [100, 100, 800, 400]); % [left, bottom, width, height]
+s = swarmchart(categorical(group), effekt);
+% Customize colors if desired
+% s(1).XData(strcmp(s(1).XData,'Helped')) -> get indices for 'Helped' if needed for coloring
+% For simplicity, let's color them based on group after plotting if direct coloring isn't straightforward.
+% Or, plot them separately:
+
+effekt_helped = effekt(hjulpet_logical == 1);
+effekt_not_helped = effekt(hjulpet_logical == 0);
+
+group_categorical_helped = repmat(categorical({'Helped'}), length(effekt_helped), 1);
+group_categorical_not_helped = repmat(categorical({'Not Helped'}), length(effekt_not_helped), 1);
+
+figure;
+swarmchart(group_categorical_not_helped, effekt_not_helped, 'ro', 'MarkerFaceColor', 'r'); % Red for Not Helped
+hold on;
+swarmchart(group_categorical_helped, effekt_helped, 'bo', 'MarkerFaceColor', 'b'); % Blue for Helped
+hold off;
+
+ylabel('Slope Efficiency ($\eta$)','Interpreter','latex');
+xlabel('Condition');
+title('Distribution of Slope Efficiency: Helped vs. Not Helped');
+legend('Not Helped', 'Helped', 'Location', 'Northwest'); % Adjust legend as needed
+grid on;
